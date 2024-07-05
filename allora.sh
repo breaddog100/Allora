@@ -126,25 +126,20 @@ function main_menu() {
 		echo "最低配置：4C8G512G；推荐配置：8C16G512G"
 		echo "请选择要执行的操作:"
 	    echo "1. 部署节点 install_node"
-	    echo "2. 停止L1节点 l1_stop_node"
-	    echo "12. 查看L1日志 l1_node_log"
-	    echo "20. 部署L2节点 l2_install_node"
-	    echo "21. 停止L2节点 l2_stop_node"
-	    echo "22. L2节点日志 l2_node_log"
-	    #echo "23. 国内机器部署 l2_install_node_for_cn"
-	    echo "1618. 卸载节点（L1&L2） uninstall_node"
+	    echo "2. 查看状态 check_status"
+	    echo "3. 查看日志 view_logs"
+	    echo "4. 创建钱包 add_wallet"
+	    echo "5. 申请验证者 "
+	    echo "1618. 卸载节点 uninstall_node"
 	    echo "0. 退出脚本 exit"
 	    read -p "请输入选项: " OPTION
 	
 	    case $OPTION in
-	    10) l1_install_node ;;
-	    11) l1_stop_node ;;
-	    12) l1_node_log ;;
-	    
-	    20) l2_install_node ;;
-	    21) l2_stop_node ;;
-	    22) l2_node_log ;;
-	    23) l2_install_node_for_cn ;;
+	    1) install_node ;;
+	    2) check_status ;;
+	    3) view_logs ;;
+	    4) add_wallet ;;
+	    5) l2_stop_node ;;
 	    1618) uninstall_node ;;
 	    0) echo "退出脚本。"; exit 0 ;;
 	    *) echo "无效选项，请重新输入。"; sleep 3 ;;
