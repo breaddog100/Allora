@@ -103,6 +103,13 @@ function add_wallet() {
 	$HOME/go/bin/allorad keys add $wallet_name
 }
 
+# 导入钱包
+function import_wallet() {
+	read -p "请输入钱包名称: " wallet_name
+	echo "请输入助记词："
+	$HOME/go/bin/allorad keys add $wallet_name --recover
+}
+
 # 查看日志
 function view_logs(){
 	sudo docker compose -f $HOME/allora-chain/docker-compose.yaml logs -f
@@ -113,7 +120,7 @@ function check_status(){
 	curl -s http://localhost:26657/status | jq .result.sync_info
 }
 
-sudo docker compose -f $HOME/allora-chain/docker-compose.yaml exec validator0 bash
+#sudo docker compose -f $HOME/allora-chain/docker-compose.yaml exec validator0 bash
 
 # 卸载节点
 function uninstall_node(){
@@ -140,17 +147,16 @@ function uninstall_node(){
 function main_menu() {
 	while true; do
 	    clear
-	    echo "===================allora-network Pre-Alpha 一键部署脚本==================="
+	    echo "===================allora-network Alpha 一键部署脚本==================="
 		echo "沟通电报群：https://t.me/lumaogogogo"
 		echo "最低配置：4C8G512G；推荐配置：8C16G512G"
-		echo "此版本是一个内部测试版，功能包含节点安装，块同步，创建钱包。大家可以先部署节点"
-		echo "创建钱包后领水，后续会增加worker部署，创建验证者以及相关功能。感谢大家的测试和包容。"
+		echo "步骤：1,部署节点;2,创建钱包;3,领水;4,领到水后部署worker"
 		echo "请选择要执行的操作:"
 	    echo "1. 部署节点 install_node"
 	    echo "2. 查看状态 check_status"
 	    echo "3. 查看日志 view_logs"
 	    echo "4. 创建钱包 add_wallet"
-	    echo "5. 申请验证者 "
+	    echo "5. 导入钱包 import_wallet"
 	    echo "6. 安装worker install_worker"
 	    echo "1618. 卸载节点 uninstall_node"
 	    echo "0. 退出脚本 exit"
@@ -161,6 +167,7 @@ function main_menu() {
 	    2) check_status ;;
 	    3) view_logs ;;
 	    4) add_wallet ;;
+	    5) import_wallet ;;
 	    6) install_worker ;;
 	    1618) uninstall_node ;;
 	    0) echo "退出脚本。"; exit 0 ;;
