@@ -60,6 +60,8 @@ function install_node(){
 
 # 安装worker
 function install_worker(){
+	
+	read -p "输入钱包助记词: " wallet_seed
 
 	# Install Python3
 	sudo apt install python3
@@ -89,6 +91,7 @@ function install_worker(){
 	mv docker-compose.yml docker-compose.yml.bak
 	wget https://raw.githubusercontent.com/breaddog100/Allora/main/docker-compose.yml
 	sed -i "s/head-id/$identity/g" docker-compose.yml
+	sed -i "s/WALLET_SEED_PHRASE/$wallet_seed/g" docker-compose.yml
 	
 	sudo docker compose build
 	sudo docker compose up -d
