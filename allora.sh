@@ -60,6 +60,14 @@ function install_node(){
 
 # 安装worker
 function install_worker(){
+
+	# Install Python3
+	sudo apt install python3
+	python3 --version
+	
+	sudo apt install python3-pip
+	pip3 --version
+
 	# Install
 	cd $HOME
 	git clone https://github.com/allora-network/basic-coin-prediction-node
@@ -82,7 +90,7 @@ function install_worker(){
 	wget https://raw.githubusercontent.com/breaddog100/Allora/main/docker-compose.yml
 	sed -i "s/head-id/$identity/g" docker-compose.yml
 	
-	sudo docker compose pull
+	sudo docker compose build
 	sudo docker compose up -d
 }
 
@@ -94,7 +102,7 @@ function add_wallet() {
 
 # 查看日志
 function view_logs(){
-	sudo docker compose logs -f
+	sudo docker compose -f $HOME/allora-chain/docker-compose.yaml logs -f
 }
 
 # 查看状态
