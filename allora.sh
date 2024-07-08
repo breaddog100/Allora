@@ -147,7 +147,7 @@ function uninstall_node(){
 function main_menu() {
 	while true; do
 	    clear
-	    echo "===================allora-network Alpha 一键部署脚本==================="
+	    echo "===================allora-network 一键部署脚本==================="
 		echo "沟通电报群：https://t.me/lumaogogogo"
 		echo "最低配置：4C8G512G；推荐配置：8C16G512G"
 		echo "步骤：1,部署节点;2,创建钱包;3,领水;4,领到水后部署worker"
