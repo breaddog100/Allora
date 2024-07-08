@@ -110,9 +110,41 @@ function import_wallet() {
 	$HOME/go/bin/allorad keys add $wallet_name --recover
 }
 
-# 查看日志
+# 查看全节点日志
 function view_logs(){
-	sudo docker compose -f $HOME/allora-chain/docker-compose.yaml logs -f
+	sudo docker ps --filter "ancestor=alloranetwork/allora-chain:v0.2.7" --format "{{.ID}}" | xargs -I {} sudo docker logs --tail 200 {}
+}
+
+# 查看worker日志
+function view_worker_logs(){
+	sudo docker ps --filter "ancestor=basic-coin-prediction-node-worker" --format "{{.ID}}" | xargs -I {} sudo docker logs -f {}
+}
+
+# 查看worker状态
+function check_worker_status(){
+	echo "输出的结果中code如果是200代表成功，如果是其他（如408）代表失败，可能会因为块同步的问题导致失败，建议等一会儿再查，如果始终不是200，建议卸载重装"
+	curl --location 'http://localhost:6000/api/v1/functions/execute' \
+	--header 'Content-Type: application/json' \
+	--data '{
+	    "function_id": "bafybeigpiwl3o73zvvl6dxdqu7zqcub5mhg65jiky2xqb4rdhfmikswzqm",
+	    "method": "allora-inference-function.wasm",
+	    "parameters": null,
+	    "topic": "1",
+	    "config": {
+	        "env_vars": [
+	            {
+	                "name": "BLS_REQUEST_PATH",
+	                "value": "/api"
+	            },
+	            {
+	                "name": "ALLORA_ARG_PARAMS",
+	                "value": "ETH"
+	            }
+	        ],
+	        "number_of_nodes": -1,
+	        "timeout": 2
+	    }
+	}'
 }
 
 # 查看状态
@@ -149,15 +181,17 @@ function main_menu() {
 	    clear
 	    echo "===================allora-network 一键部署脚本==================="
 		echo "沟通电报群：https://t.me/lumaogogogo"
-		echo "最低配置：4C8G512G；推荐配置：8C16G512G"
-		echo "步骤：1,部署节点;2,创建钱包;3,领水;4,领到水后部署worker"
+		echo "最低配置：4C8G50G；推荐配置：8C16G512G"
+		echo "步骤：1,部署全节点;2,创建钱包;3,领水;4,领到水后部署worker"
 		echo "请选择要执行的操作:"
-	    echo "1. 部署节点 install_node"
-	    echo "2. 查看状态 check_status"
-	    echo "3. 查看日志 view_logs"
+	    echo "1. 部署全节点 install_node"
+	    echo "2. 查看全节点状态 check_status"
+	    echo "3. 查看全节点日志 view_logs"
 	    echo "4. 创建钱包 add_wallet"
 	    echo "5. 导入钱包 import_wallet"
-	    echo "6. 安装worker install_worker"
+	    echo "6. 部署worker install_worker"
+	    echo "7. 查看worker状态 check_worker_status"
+	    echo "8. 查看worker日志 view_worker_logs"
 	    echo "1618. 卸载节点 uninstall_node"
 	    echo "0. 退出脚本 exit"
 	    read -p "请输入选项: " OPTION
@@ -169,6 +203,8 @@ function main_menu() {
 	    4) add_wallet ;;
 	    5) import_wallet ;;
 	    6) install_worker ;;
+	    7) check_worker_status ;;
+	    8) view_worker_logs ;;
 	    1618) uninstall_node ;;
 	    0) echo "退出脚本。"; exit 0 ;;
 	    *) echo "无效选项，请重新输入。"; sleep 3 ;;
