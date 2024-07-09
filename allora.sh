@@ -152,6 +152,16 @@ function check_status(){
 	curl -s http://localhost:26657/status | jq .result.sync_info
 }
 
+# 修复worker 408
+function fix_worker_408(){
+	sed -i 's/--topic=1/--topic=allora-topic-1-worker/' $HOME/basic-coin-prediction-node/docker-compose.yml
+	sudo docker stop basic-coin-prediction-node-worker
+	cd $HOME/basic-coin-prediction-node/
+	sudo docker compose build
+	sudo docker compose up -d
+	echo "已经修复，请运行7查看状态"
+}
+
 #sudo docker compose -f $HOME/allora-chain/docker-compose.yaml exec validator0 bash
 
 # 卸载节点
@@ -183,6 +193,9 @@ function main_menu() {
 		echo "沟通电报群：https://t.me/lumaogogogo"
 		echo "最低配置：4C8G50G；推荐配置：8C16G512G"
 		echo "步骤：1,部署全节点;2,创建钱包;3,领水;4,领到水后部署worker"
+		echo "感谢以下无私的分享者："
+    	echo "Jack Putin 修复worker 408问题"
+    	echo "===================桃花潭水深千尺，不及汪伦送我情====================="
 		echo "请选择要执行的操作:"
 	    echo "1. 部署全节点 install_node"
 	    echo "2. 查看全节点状态 check_status"
@@ -192,6 +205,7 @@ function main_menu() {
 	    echo "6. 部署worker install_worker"
 	    echo "7. 查看worker状态 check_worker_status"
 	    echo "8. 查看worker日志 view_worker_logs"
+	    echo "9. 修复408状态 fix_worker_408"
 	    echo "1618. 卸载节点 uninstall_node"
 	    echo "0. 退出脚本 exit"
 	    read -p "请输入选项: " OPTION
@@ -205,6 +219,7 @@ function main_menu() {
 	    6) install_worker ;;
 	    7) check_worker_status ;;
 	    8) view_worker_logs ;;
+	    9) fix_worker_408 ;;
 	    1618) uninstall_node ;;
 	    0) echo "退出脚本。"; exit 0 ;;
 	    *) echo "无效选项，请重新输入。"; sleep 3 ;;
